@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mysore Aggregation</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 20px;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    h2 {
+      color: #0066cc;
+    }
+
+    p {
+      color: #666;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Mysore Filter Results</h1>
+  <form action="/mysore_aggr" method="get">
+    <label for="minRating">Enter Minimum Rating:</label>
+    <input type="number" step="0.1" name="minRating" id="minRating" value="<%= minRating || 3.5 %>" required>
+    <br>
+    <label for="pincode">Enter Pincode:</label>
+    <input type="text" name="pincode" id="pincode" value="<%= userPincode || '' %>" required>
+    <button type="submit">Submit</button>
+  </form>
+  <!-- Display maximum rating information -->
+  <% if (typeof maxRating !== 'undefined') { %>
+    <h2>Maximum Rating</h2>
+    <p>Maximum Rating from Restaurants: <%= maxRating %></p>
+  <% } else { %>
+    <p>No rating information available.</p>
+  <% } %>
+  <% if (typeof hotelsAndRestaurants !== 'undefined' && hotelsAndRestaurants.length > 0) { %>
+    <h2>Hotels and Restaurants in Pincode <%= userPincode %></h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Hotel Name</th>
+          <th>Hotel Rating</th>
+          <th>Restaurant Name</th>
+          <th>Restaurant Rating</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% hotelsAndRestaurants.forEach(function(entry) { %>
+          <tr>
+            <td><%= entry.hotel_name %></td>
+            <td><%= entry.hotel_rating %></td>
+            <td><%= entry.restaurant_name %></td>
+            <td><%= entry.restaurant_rating %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No hotels and restaurants found in Pincode <%= userPincode %>.</p>
+  <% } %>
+  <!-- Display restaurant spots information -->
+  <% if (typeof restResults !== 'undefined' && restResults.length > 0) { %>
+    <h2>Restaurant in Cities with Average Rating > <%= minRating || 3.5 %></h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Rating</th>
+          <th>City</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% restResults.forEach(function(spot) { %>
+          <tr>
+            <td><%= spot.name %></td>
+            <td><%= spot.rating %></td>
+            <td><%= spot.city %></td>
+            
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No tourist spots found in cities with an average rating > <%= minRating || 3.5 %>.</p>
+  <% } %>
+
+  <!-- Display average entry fee information -->
+  <% if (typeof averageEntryFee !== 'undefined' && averageEntryFee.length > 0) { %>
+    <h2>Average Entry Fee in Each District</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>District Name</th>
+          <th>Average Entry Fee</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% averageEntryFee.forEach(function(entry) { %>
+          <tr>
+            <td><%= entry.district_name %></td>
+            <td><%= entry.average_entry_fee %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No data available for average entry fee in each district.</p>
+  <% } %>
+
+  <!-- Display high-rated hotels information -->
+  <% if (typeof highRatedHotels !== 'undefined' && highRatedHotels.length > 0) { %>
+    <h2>Hotels with Rating Greater Than Average</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Rating</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% highRatedHotels.forEach(function(hotel) { %>
+          <tr>
+            <td><%= hotel.name %></td>
+            <td><%= hotel.rating %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No hotels found with a rating greater than the average.</p>
+  <% } %>
+
+  <!-- Display tourist spots with low entry fee information -->
+  <% if (typeof lowEntryFeeSpots !== 'undefined' && lowEntryFeeSpots.length > 0) { %>
+    <h2>Tourist Spots with Entry Fee Less Than Average</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Entry Fee</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% lowEntryFeeSpots.forEach(function(spot) { %>
+          <tr>
+            <td><%= spot.Place_name %></td>
+            <td><%= spot.entry_fee %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No tourist spots found with an entry fee less than the average.</p>
+  <% } %>
+
+  <!-- You can add more HTML and EJS code here as needed -->
+
+</body>
+</html>
